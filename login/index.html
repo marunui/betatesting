@@ -1,0 +1,2626 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mayapprendo - Aprende Maya</title>
+    
+    <!-- Importar fuentes de Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Variables de colores */
+        :root {
+            --primary: #629E44;
+            --secondary: #EDBA58;
+            --accent: #9E2449;
+            --light: #f8f8f8;
+            --dark: #40170E;
+            --gray: #888;
+            --light-gray: #e0e0e0;
+        }
+        
+        /* Modo oscuro */
+        body.dark-mode {
+            --light: #261e1c;
+            --dark: #f8f8f8;
+            --gray: #aaa;
+            --light-gray: #555;
+            background-color: var(--light);
+            color: var(--dark);
+        }
+        
+        /* Estilos generales */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "DM Sans", sans-serif;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            max-width: 480px;
+            margin: 0 auto;
+            position: relative;
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        .container {
+            padding: 20px;
+            padding-bottom: 80px;
+        }
+        
+        .page {
+            display: none;
+        }
+        
+        .active {
+            display: block;
+        }
+        
+        /* Header */
+        header {
+            background-color:white;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        body.dark-mode header {
+            background-color: var(--light);
+        }
+        
+        .logo {
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        
+        .cacao-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .cacao {
+            display: flex;
+            align-items: center;
+            background-color: rgba(255,255,255,0.2);
+            padding: 5px 10px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        
+        .cacao img {
+            width: 20px;
+            height: 20px;
+            margin-right: 5px;
+        }
+        
+        .shop-icon-small {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+        
+        /* Botones */
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+            font-size: 0.8rem;
+            padding: 8px 15px;
+            width: auto;
+            margin: 10px auto;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        /* Formularios */
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .form-control.error {
+            border-color: #dc3545;
+        }
+        
+        .error-message {
+            color: #dc3545;
+            font-size: 0.8rem;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .oauth-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+        }
+        
+        .oauth-btn {
+            flex: 1;
+            padding: 10px;
+            margin: 0 5px;
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            background-color: white;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* Standby de imagen */
+        .img-standby {
+            width: 100%;
+            height: 200px;
+            background-color: var(--light-gray);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+            margin: 20px 0;
+            color: var(--gray);
+        }
+
+        /* Estilos para las progress bars de lecciones */
+        .progress-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 6px;
+            background-color: var(--light-gray);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--accent);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-percentage {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--dark);
+            min-width: 30px;
+            text-align: right;
+        }
+        
+        /* Globo de texto */
+        .speech-bubble {
+            position: relative;
+            background-color: white;
+            border-radius: 15px;
+            padding: 15px;
+            margin: 20px 0;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        body.dark-mode .speech-bubble {
+            background-color: var(--light);
+        }
+        
+        .speech-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 10px solid white;
+        }
+        
+        body.dark-mode .speech-bubble:after {
+            border-top-color: var(--light);
+        }
+        
+        /* Secciones de lecciones */
+        .section-title {
+            margin: 20px 0 10px;
+            font-size: 1.2rem;
+            color: var(--primary);
+        }
+        
+        .lessons-scroll {
+            display: flex;
+            overflow-x: auto;
+            padding: 10px 0;
+            gap: 15px;
+        }
+        
+        .lesson-card {
+            min-width: 150px;
+            background-color: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            cursor: pointer;
+        }
+        
+        body.dark-mode .lesson-card {
+            background-color: var(--light);
+        }
+        
+        .lesson-img {
+            width: 100%;
+            height: 80px;
+            background-color: var(--light-gray);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--gray);
+        }
+        
+        /* Navegación inferior */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            max-width: 480px;
+            margin: 0 auto;
+            display: none;
+            z-index: 1000;
+        }
+        
+        body.dark-mode .bottom-nav {
+            background-color: var(--light);
+        }
+        
+        .bottom-nav.visible {
+            display: flex;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.8rem;
+            color: var(--gray);
+            cursor: pointer;
+        }
+        
+        .nav-item.active {
+            color: var(--secondary);
+        }
+        
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+        }
+        
+        /* Logros */
+        .achievement {
+            background-color: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        body.dark-mode .achievement {
+            background-color: var(--light);
+        }
+        
+        .achievement.completed {
+            border-left: 5px solid var(--accent);
+        }
+        
+        .achievement.locked {
+            background-color: var(--light-gray);
+            color: var(--gray);
+        }
+        
+        .achievement-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .achievement.locked .achievement-icon {
+            background-color: var(--gray);
+        }
+        
+        .achievement-info {
+            flex: 1;
+        }
+        
+        .achievement-progress {
+            font-weight: bold;
+            color: var(--accent);
+        }
+        
+        /* Balam */
+        .balam-container {
+            text-align: center;
+            padding: 20px 0;
+        }
+        
+        .balam-pet {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--gray);
+        }
+        
+        .balam-actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .balam-btn {
+            padding: 10px 20px;
+            background-color: var(--primary);
+            border: none;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            color: white;
+        }
+        
+        /* Configuración */
+        .settings-section {
+            margin-bottom: 30px;
+        }
+        
+        .settings-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+            border-bottom: 1px solid var(--light-gray);
+            padding-bottom: 5px;
+        }
+        
+        .settings-item {
+            background-color: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            cursor: pointer;
+        }
+        
+        body.dark-mode .settings-item {
+            background-color: var(--light);
+        }
+        
+        .profile-pic {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--light-gray);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--gray);
+            margin-right: 15px;
+        }
+        
+        .profile-info {
+            flex: 1;
+        }
+        
+        .badges-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .badge {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.8rem;
+            color: white;
+        }
+        
+        /* Tienda de cacaos */
+        .shop-item {
+            background-color: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        body.dark-mode .shop-item {
+            background-color: var(--light);
+        }
+        
+        .shop-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--secondary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .shop-info {
+            flex: 1;
+        }
+        
+        .shop-price {
+            font-weight: bold;
+            color: var(--accent);
+        }
+        
+        /* Página de eliminación de cuenta */
+        .delete-container {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .delete-image {
+            width: 200px;
+            height: 200px;
+            margin: 20px auto;
+            background-color: var(--light-gray);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--gray);
+        }
+        
+        .delete-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        /* Página de edición de perfil */
+        .profile-edit-container {
+            padding: 20px;
+        }
+        
+        .profile-pic-large {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: var(--light-gray);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 20px;
+            color: var(--gray);
+            cursor: pointer;
+        }
+        
+        .achievement-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .achievement-select {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--light-gray);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        
+        .achievement-select.selected {
+            border-color: var(--primary);
+        }
+        
+        /* Página de lección de alimentos */
+        .lesson-container {
+            padding: 20px;
+        }
+        
+        .food-item {
+            background-color: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        body.dark-mode .food-item {
+            background-color: var(--light);
+        }
+        
+        .food-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            background-color: var(--light-gray);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+            color: var(--gray);
+        }
+        
+        .food-info {
+            flex: 1;
+        }
+        
+        .food-maya {
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+        
+        /* Página de evaluación tipo Kahoot */
+        .quiz-container {
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .quiz-image {
+            width: 200px;
+            height: 200px;
+            margin: 20px auto;
+            background-color: var(--light-gray);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--gray);
+        }
+        
+        .quiz-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .quiz-option {
+            padding: 15px;
+            background-color: white;
+            border-radius: 10px;
+            border: 2px solid var(--light-gray);
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        body.dark-mode .quiz-option {
+            background-color: var(--light);
+        }
+        
+        .quiz-option:hover {
+            transform: scale(1.05);
+        }
+        
+        .quiz-option.correct {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .quiz-option.incorrect {
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        .quiz-option.disabled {
+            pointer-events: none;
+        }
+        
+        /* Página de resultados */
+        .result-container {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .result-image {
+            width: 200px;
+            height: 200px;
+            margin: 20px auto;
+            background-color: var(--light-gray);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--gray);
+        }
+        
+        /* Texto centrado */
+        .text-center {
+            text-align: center;
+        }
+        
+        .small-text {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+        
+        .divider {
+            text-align: center;
+            margin: 20px 0;
+            color: var(--gray);
+            position: relative;
+        }
+        
+        .divider:before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background-color: var(--light-gray);
+            z-index: -1;
+        }
+        
+        .divider span {
+            background-color: var(--light);
+            padding: 0 10px;
+        }
+
+        /* Nuevos estilos para las mejoras */
+        
+        /* Página de recuperación de contraseña */
+        .code-input {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .code-digit {
+            width: 50px;
+            height: 50px;
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        
+        .timer {
+            font-weight: bold;
+            color: var(--accent);
+        }
+        
+        /* Página de configuración inicial */
+        .setup-container {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .setup-image {
+            width: 200px;
+            height: 200px;
+            margin: 20px auto;
+            background-color: var(--light-gray);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--gray);
+        }
+        
+        /* Página de tutorial */
+        .tutorial-container {
+            padding: 20px;
+        }
+        
+        .tutorial-step {
+            margin-bottom: 30px;
+        }
+        
+        .tutorial-image {
+            width: 100%;
+            height: 200px;
+            background-color: var(--light-gray);
+            border-radius: 10px;
+            margin: 15px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--gray);
+        }
+        
+        /* Página de logros mejorada */
+        .user-level {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        body.dark-mode .user-level {
+            background-color: var(--light);
+        }
+        
+        .user-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background-color: var(--light-gray);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+            color: var(--gray);
+        }
+        
+        .user-info {
+            flex: 1;
+        }
+        
+        .user-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .user-level-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 5px;
+        }
+        
+        .level-badge {
+            background-color: var(--primary);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .level-category {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .achievement-section {
+            margin-bottom: 30px;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .claim-btn {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            padding: 5px 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        /* Página de Balam mejorada */
+        .balam-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .stat-name {
+            font-weight: bold;
+        }
+        
+        .stat-bar {
+            width: 150px;
+            height: 10px;
+            background-color: var(--light-gray);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .stat-fill {
+            height: 100%;
+            background-color: var(--primary);
+            border-radius: 5px;
+        }
+        
+        /* Grid para alimentar, jugar y personalizar */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .grid-item {
+            background-color: white;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            cursor: pointer;
+            text-align: center;
+        }
+        
+        body.dark-mode .grid-item {
+            background-color: var(--light);
+        }
+        
+        .grid-image {
+            width: 60px;
+            height: 60px;
+            background-color: var(--light-gray);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--gray);
+        }
+        
+        .grid-2x2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        /* Página de compra */
+        .purchase-container {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .purchase-image {
+            width: 150px;
+            height: 150px;
+            margin: 20px auto;
+            background-color: var(--light-gray);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--gray);
+        }
+        
+        .purchase-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        /* Página de accesibilidad */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: var(--primary);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
+        .slider-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .volume-slider {
+            width: 100%;
+            margin: 10px 0;
+        }
+        
+        .text-size-slider {
+            width: 100%;
+            margin: 10px 0;
+        }
+        
+        /* Página de reportar problema */
+        .report-container {
+            padding: 20px;
+        }
+        
+        .dropdown {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+        
+        .report-textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            font-size: 1rem;
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        /* Tienda mejorada */
+        .shop-section {
+            margin-bottom: 30px;
+        }
+        
+        .shop-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .shop-grid-item {
+            background-color: white;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            cursor: pointer;
+        }
+        
+        body.dark-mode .shop-grid-item {
+            background-color: var(--light);
+        }
+        
+        .ad-button {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        /* Página de pago */
+        .payment-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .payment-option {
+            background-color: white;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            cursor: pointer;
+        }
+        
+        body.dark-mode .payment-option {
+            background-color: var(--light);
+        }
+        
+        .payment-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--light-gray);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+            color: var(--gray);
+        }
+        
+        /* Lecciones mejoradas */
+        .lesson-header {
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        body.dark-mode .lesson-header {
+            background-color: var(--light);
+        }
+        
+        .lesson-title {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        
+        .lesson-subtitle {
+            font-size: 1.1rem;
+            color: var(--secondary);
+            margin-bottom: 15px;
+        }
+        
+        .lesson-intro {
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .lesson-call {
+            font-weight: bold;
+            color: var(--accent);
+            margin-bottom: 15px;
+        }
+        
+        /* Estilos para filas scrolleables en personalizar Balam */
+        .customize-row {
+            margin-bottom: 20px;
+        }
+        
+        .customize-row h4 {
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+        
+        .customize-scroll {
+            display: flex;
+            overflow-x: auto;
+            gap: 15px;
+            padding: 10px 0;
+        }
+        
+        .customize-item {
+            min-width: 100px;
+            background-color: white;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            cursor: pointer;
+        }
+        
+        body.dark-mode .customize-item {
+            background-color: var(--light);
+        }
+        
+        .customize-image {
+            width: 60px;
+            height: 60px;
+            background-color: var(--light-gray);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--gray);
+        }
+        
+        /* Estilos para el examen de escritura */
+        .writing-question {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        body.dark-mode .writing-question {
+            background-color: var(--light);
+        }
+        
+        .writing-input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .writing-feedback {
+            margin-top: 5px;
+            font-size: 0.9rem;
+            display: none;
+        }
+        
+        .writing-feedback.correct {
+            color: var(--primary);
+            display: block;
+        }
+        
+        .writing-feedback.incorrect {
+            color: var(--accent);
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="login-page" class="page">
+        <div class="container">
+            <h1 class="text-center" style="color: var(--secondary); "></h1>
+            <image src="https://i.imgur.com/54XGMwy.png" width="250" height="50" alt="Mayapprendo Logo" 
+                   style="display: block; margin: 10px auto;"></image>
+                       
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Nombre de usuario" id="login-username">
+            </div>
+            
+            <div class="form-group">
+                <input type="password" class="form-control" placeholder="Contraseña">
+            </div>
+            
+            <button class="btn btn-primary" onclick="loginUser()">Iniciar Sesión</button>
+            
+            <p class="text-center small-text" style="margin-top: 20px;">
+                ¿No tienes una cuenta? <a href="#" onclick="showPage('register-page')" style="color: var(--secondary);">Regístrate</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Variables para los quizzes
+        let currentAnimalQuestion = 0;
+        let currentFoodQuestion = 0;
+        let currentNumbersQuestion = 0;
+        let currentColorsQuestion = 0;
+        let currentPronounsQuestion = 0;
+        let correctAnimalAnswers = 0;
+        let correctFoodAnswers = 0;
+        let correctNumbersAnswers = 0;
+        let correctColorsAnswers = 0;
+        let correctPronounsAnswers = 0;
+        let correctWritingAnswers = 0;
+        let correctNumbersWritingAnswers = 0;
+        
+        // Variables para el progreso de lecciones y logros
+        let lessonProgress = {
+            'animal-lesson-page': 0,
+            'family-lesson-page': 0,
+            'food-lesson-page': 0,
+            'numbers-lesson-page': 0,
+            'colors-lesson-page': 0,
+            'pronouns-lesson-page': 0
+        };
+        
+        let completedLessons = [];
+        let completedQuizzes = 0;
+        let perfectQuizzes = 0;
+        
+        // Logros
+        let achievements = {
+            'daily-quiz': { progress: 0, completed: false },
+            '5-lessons': { progress: 0, completed: false },
+            '10-lessons': { progress: 0, completed: false },
+            '3-perfect-quizzes': { progress: 0, completed: false },
+            '6-perfect-quizzes': { progress: 0, completed: false },
+            '10-days-login': { progress: 100, completed: true },
+            '15-days-login': { progress: 67, completed: false }
+        };
+        
+        const animalQuestions = [
+            {
+                image: "🐔",
+                question: "¿Cómo se dice 'Gallina/Gallo' en Maya?",
+                options: ["Kax", "T'u'ul", "K'eek'en", "Wakax"],
+                correct: 0
+            },
+            {
+                image: "🐇",
+                question: "¿Cómo se dice 'Conejo' en Maya?",
+                options: ["T'u'ul", "Kax", "Áans", "Cutz"],
+                correct: 0
+            },
+            {
+                image: "🐷",
+                question: "¿Cómo se dice 'Cerdo' en Maya?",
+                options: ["K'eek'en", "Tsimin", "Ch'o", "Wakax"],
+                correct: 0
+            },
+            {
+                image: "🐄",
+                question: "¿Cómo se dice 'Vaca/Ganado' en Maya?",
+                options: ["Wakax", "Kax", "T'u'ul", "Áans"],
+                correct: 0
+            },
+            {
+                image: "🐎",
+                question: "¿Cómo se dice 'Caballo' en Maya?",
+                options: ["Tsimin", "K'eek'en", "Cutz", "Ch'o"],
+                correct: 0
+            },
+            {
+                image: "🦆",
+                question: "¿Cómo se dice 'Pato' en Maya?",
+                options: ["Áans", "Kax", "T'u'ul", "Cutz"],
+                correct: 0
+            }
+        ];
+        
+        const foodQuestions = [
+            {
+                image: "🍊",
+                question: "¿Cómo se dice 'Naranja' en Maya?",
+                options: ["Ts'íin", "Óox", "Páak'áal", "Ch'óop"],
+                correct: 0
+            },
+            {
+                image: "🥑",
+                question: "¿Cómo se dice 'Aguacate' en Maya?",
+                options: ["Óox", "Ts'íin", "Maan", "Pichi'"],
+                correct: 0
+            },
+            {
+                image: "🍈",
+                question: "¿Cómo se dice 'Guayaba' en Maya?",
+                options: ["Páak'áal", "Ch'óop", "Chak pichi'", "K'úumben"],
+                correct: 0
+            },
+            {
+                image: "🍈",
+                question: "¿Cómo se dice 'Papaya' en Maya?",
+                options: ["Ch'óop", "Páak'áal", "Maan", "Pichi'"],
+                correct: 0
+            },
+            {
+                image: "🥭",
+                question: "¿Cómo se dice 'Mango' en Maya?",
+                options: ["Maan", "Ch'óop", "Pichi'", "K'úumben"],
+                correct: 0
+            },
+            {
+                image: "🍈",
+                question: "¿Cómo se dice 'Guaya' en Maya?",
+                options: ["Pichi'", "Maan", "Chak pichi'", "Ts'íin"],
+                correct: 0
+            }
+        ];
+        
+        const numbersWritingQuestions = [
+            {
+                text: "El número 1 en maya es ______",
+                answer: "Hun"
+            },
+            {
+                text: "El número 2 en maya es ______",
+                answer: "Ka'a"
+            },
+            {
+                text: "El número 3 en maya es ______",
+                answer: "Óox"
+            },
+            {
+                text: "El número 4 en maya es ______",
+                answer: "Kan"
+            },
+            {
+                text: "El número 5 en maya es ______",
+                answer: "Ho'"
+            },
+            {
+                text: "El número 6 en maya es ______",
+                answer: "Wak"
+            }
+        ];
+        
+        const colorsQuestions = [
+            {
+                image: "🔴",
+                question: "¿Cómo se dice 'Rojo' en Maya?",
+                options: ["Chak", "Ya'ax", "K'an", "Ek'"],
+                correct: 0
+            },
+            {
+                image: "🔵",
+                question: "¿Cómo se dice 'Azul/Verde' en Maya?",
+                options: ["Ya'ax", "Chak", "K'an", "Sak"],
+                correct: 0
+            },
+            {
+                image: "🟡",
+                question: "¿Cómo se dice 'Amarillo' en Maya?",
+                options: ["K'an", "Chak", "Ya'ax", "Ek'"],
+                correct: 0
+            },
+            {
+                image: "⚫",
+                question: "¿Cómo se dice 'Negro' en Maya?",
+                options: ["Ek'", "Sak", "Chak", "Ya'ax"],
+                correct: 0
+            },
+            {
+                image: "⚪",
+                question: "¿Cómo se dice 'Blanco' en Maya?",
+                options: ["Sak", "Ek'", "Chak", "K'an"],
+                correct: 0
+            },
+            {
+                image: "🟣",
+                question: "¿Cómo se dice 'Morado' en Maya?",
+                options: ["Morado", "Kafé", "Naranja", "Sak"],
+                correct: 0
+            }
+        ];
+        
+        const pronounsQuestions = [
+            {
+                image: "👤",
+                question: "¿Cómo se dice 'Yo' en Maya?",
+                options: ["In", "A", "U", "To'on"],
+                correct: 0
+            },
+            {
+                image: "👤",
+                question: "¿Cómo se dice 'Tú' en Maya?",
+                options: ["A", "In", "U", "E'ex"],
+                correct: 0
+            },
+            {
+                image: "👤",
+                question: "¿Cómo se dice 'Él/Ella' en Maya?",
+                options: ["U", "In", "A", "To'on"],
+                correct: 0
+            },
+            {
+                image: "👥",
+                question: "¿Cómo se dice 'Nosotros' en Maya?",
+                options: ["To'on", "E'ex", "U", "In"],
+                correct: 0
+            },
+            {
+                image: "👥",
+                question: "¿Cómo se dice 'Ustedes' en Maya?",
+                options: ["E'ex", "To'on", "U", "In"],
+                correct: 0
+            },
+            {
+                image: "👥",
+                question: "¿Cómo se dice 'Ellos/Ellas' en Maya?",
+                options: ["U", "To'on", "E'ex", "In"],
+                correct: 0
+            }
+        ];
+        
+        const writingQuestions = [
+            {
+                text: "Mi ______ es también hija de mi papá",
+                answer: "Láak'"
+            },
+            {
+                text: "La mamá de mi mamá es mi ______",
+                answer: "Chiich"
+            },
+            {
+                text: "Mi papá es el ______ de mi mamá",
+                answer: "Íicham"
+            },
+            {
+                text: "Mi tía es la ______ de mi papá",
+                answer: "Láak'"
+            },
+            {
+                text: "Yo soy el ______ de mis papás",
+                answer: "Paal"
+            },
+            {
+                text: "Mi ______ es esposo de mi abuela",
+                answer: "Nool"
+            }
+        ];
+        
+        // Función para mostrar páginas específicas
+        function showPage(pageId) {
+            // Ocultar todas las páginas
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Mostrar la página solicitada
+            document.getElementById(pageId).classList.add('active');
+            
+            // Actualizar navegación activa
+            if (pageId === 'home-page' || pageId === 'achievements-page' || 
+                pageId === 'balam-page' || pageId === 'settings-page' ||
+                pageId === 'cacao-shop-page' || pageId === 'balam-feed-page' ||
+                pageId === 'balam-play-page' || pageId === 'balam-customize-page' ||
+                pageId.includes('lesson-page') || pageId.includes('quiz-page') || pageId.includes('result-page')) {
+                updateNavActive(pageId);
+                showBottomNav();
+            } else {
+                // Ocultar navegación en páginas de login y registro
+                hideBottomNav();
+            }
+            
+            // Inicializar quiz si es necesario
+            if (pageId === 'animal-quiz-page') {
+                currentAnimalQuestion = 0;
+                correctAnimalAnswers = 0;
+                loadAnimalQuestion();
+            }
+            
+            if (pageId === 'food-quiz-page') {
+                currentFoodQuestion = 0;
+                correctFoodAnswers = 0;
+                loadFoodQuestion();
+            }
+            
+            if (pageId === 'numbers-writing-quiz-page') {
+                correctNumbersWritingAnswers = 0;
+                loadNumbersWritingQuestions();
+            }
+            
+            if (pageId === 'colors-quiz-page') {
+                currentColorsQuestion = 0;
+                correctColorsAnswers = 0;
+                loadColorsQuestion();
+            }
+            
+            if (pageId === 'pronouns-quiz-page') {
+                currentPronounsQuestion = 0;
+                correctPronounsAnswers = 0;
+                loadPronounsQuestion();
+            }
+            
+            if (pageId === 'family-writing-quiz-page') {
+                correctWritingAnswers = 0;
+                loadWritingQuestions();
+            }
+            
+            // Actualizar página de inicio
+            if (pageId === 'home-page') {
+                updateHomePage();
+                updateFunFact();
+            }
+            
+            // Actualizar página de logros
+            if (pageId === 'achievements-page') {
+                updateAchievementsPage();
+            }
+        }
+        
+        // Función para actualizar la navegación activa
+        function updateNavActive(pageId) {
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            if (pageId === 'home-page') {
+                document.querySelector('.nav-item:nth-child(1)').classList.add('active');
+            } else if (pageId === 'achievements-page') {
+                document.querySelector('.nav-item:nth-child(2)').classList.add('active');
+            } else if (pageId === 'balam-page' || pageId === 'balam-feed-page' || 
+                       pageId === 'balam-play-page' || pageId === 'balam-customize-page') {
+                document.querySelector('.nav-item:nth-child(3)').classList.add('active');
+            } else if (pageId === 'settings-page' || pageId === 'cacao-shop-page') {
+                document.querySelector('.nav-item:nth-child(4)').classList.add('active');
+            }
+        }
+        
+        // Función para mostrar la navegación inferior
+        function showBottomNav() {
+            document.getElementById('bottom-nav').classList.add('visible');
+        }
+        
+        // Función para ocultar la navegación inferior
+        function hideBottomNav() {
+            document.getElementById('bottom-nav').classList.remove('visible');
+        }
+        
+        // Función para iniciar sesión
+        function loginUser() {
+            const username = document.getElementById('login-username').value;
+            if (username) {
+                // Actualizar nombre de usuario en todas las páginas
+                document.getElementById('achievement-username').textContent = username;
+                document.getElementById('settings-username').textContent = username;
+                document.getElementById('balam-username').textContent = username;
+                
+                // Mostrar página de inicio y navegación
+                showPage('home-page');
+                showBottomNav();
+            } else {
+                alert('Por favor ingresa un nombre de usuario');
+            }
+        }
+        
+        // Función para validar correo electrónico
+        function validateEmail(email) {
+            const validDomains = [
+                '@gmail.com',
+                '@hotmail.com',
+                '@outlook.com',
+                '@yahoo.com',
+                '@alumnos.uady.mx',
+                '@correo.uady.mx',
+                '@icloud.com'
+            ];
+            
+            return validDomains.some(domain => email.endsWith(domain));
+        }
+        
+        // Función para registrar usuario
+        function registerUser() {
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const confirm = document.getElementById('register-confirm').value;
+            const emailError = document.getElementById('email-error');
+            const passwordError = document.getElementById('register-password-error');
+            const confirmError = document.getElementById('register-confirm-error');
+            
+            // Resetear errores
+            emailError.style.display = 'none';
+            passwordError.style.display = 'none';
+            confirmError.style.display = 'none';
+            document.getElementById('register-email').classList.remove('error');
+            document.getElementById('register-password').classList.remove('error');
+            document.getElementById('register-confirm').classList.remove('error');
+            
+            // Validar correo
+            if (!validateEmail(email)) {
+                emailError.textContent = 'Por favor ingresa un correo válido con uno de los siguientes dominios: @gmail.com, @hotmail.com, @outlook.com, @yahoo.com, @alumnos.uady.mx, @correo.uady.mx, @icloud.com';
+                emailError.style.display = 'block';
+                document.getElementById('register-email').classList.add('error');
+                return;
+            }
+            
+            // Validar contraseñas
+            if (password.length < 6) {
+                passwordError.textContent = 'La contraseña debe tener al menos 6 caracteres';
+                passwordError.style.display = 'block';
+                document.getElementById('register-password').classList.add('error');
+                return;
+            }
+            
+            if (password !== confirm) {
+                confirmError.textContent = 'Las contraseñas no coinciden';
+                confirmError.style.display = 'block';
+                document.getElementById('register-confirm').classList.add('error');
+                return;
+            }
+            
+            // Si todo está bien, redirigir a configuración
+            showPage('setup-welcome-page');
+        }
+        
+        // Función para registrar usuario educativo
+        function registerEducationUser() {
+            const email = document.getElementById('education-email').value;
+            const password = document.getElementById('education-password').value;
+            const confirm = document.getElementById('education-confirm').value;
+            const emailError = document.getElementById('education-email-error');
+            const passwordError = document.getElementById('education-password-error');
+            const confirmError = document.getElementById('education-confirm-error');
+            
+            // Resetear errores
+            emailError.style.display = 'none';
+            passwordError.style.display = 'none';
+            confirmError.style.display = 'none';
+            document.getElementById('education-email').classList.remove('error');
+            document.getElementById('education-password').classList.remove('error');
+            document.getElementById('education-confirm').classList.remove('error');
+            
+            // Validar correo
+            if (!validateEmail(email)) {
+                emailError.textContent = 'Por favor ingresa un correo válido con uno de los siguientes dominios: @gmail.com, @hotmail.com, @outlook.com, @yahoo.com, @alumnos.uady.mx, @correo.uady.mx, @icloud.com';
+                emailError.style.display = 'block';
+                document.getElementById('education-email').classList.add('error');
+                return;
+            }
+            
+            // Validar contraseñas
+            if (password.length < 6) {
+                passwordError.textContent = 'La contraseña debe tener al menos 6 caracteres';
+                passwordError.style.display = 'block';
+                document.getElementById('education-password').classList.add('error');
+                return;
+            }
+            
+            if (password !== confirm) {
+                confirmError.textContent = 'Las contraseñas no coinciden';
+                confirmError.style.display = 'block';
+                document.getElementById('education-confirm').classList.add('error');
+                return;
+            }
+            
+            // Si todo está bien, redirigir a configuración
+            showPage('setup-welcome-page');
+        }
+        
+        // Función para completar la configuración
+        function completeSetup() {
+            showPage('home-page');
+            showBottomNav();
+        }
+        
+        // Función para cerrar sesión
+        function logout() {
+            // Limpiar campos de formulario
+            document.getElementById('login-username').value = '';
+            
+            // Ocultar navegación inferior
+            hideBottomNav();
+            
+            // Regresar a la página de bienvenida
+            showPage('welcome-page');
+        }
+        
+        // Funciones para el quiz de animales
+        function startAnimalQuiz() {
+            // Actualizar progreso de la lección
+            updateLessonProgress('animal-lesson-page', 50);
+            
+            // Actualizar logros
+            updateAchievementProgress('daily-quiz', 100);
+            
+            showPage('animal-quiz-page');
+        }
+        
+        function loadAnimalQuestion() {
+            if (currentAnimalQuestion >= animalQuestions.length) {
+                // Mostrar resultados
+                showAnimalResults();
+                return;
+            }
+            
+            const question = animalQuestions[currentAnimalQuestion];
+            document.getElementById('animal-question').textContent = question.question;
+            document.getElementById('animal-quiz-image').textContent = question.image;
+            document.getElementById('animal-progress').textContent = `Pregunta ${currentAnimalQuestion + 1} de ${animalQuestions.length}`;
+            
+            const optionsContainer = document.getElementById('animal-options');
+            optionsContainer.innerHTML = '';
+            
+            // Mezclar opciones aleatoriamente
+            const shuffledOptions = [...question.options];
+            for (let i = shuffledOptions.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffledOptions[i], shuffledOptions[j]] = [shuffledOptions[j], shuffledOptions[i]];
+            }
+            
+            // Actualizar índice correcto después de mezclar
+            const correctIndex = shuffledOptions.indexOf(question.options[question.correct]);
+            
+            shuffledOptions.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'quiz-option';
+                optionElement.textContent = option;
+                optionElement.onclick = () => checkAnimalAnswer(index, correctIndex);
+                optionsContainer.appendChild(optionElement);
+            });
+        }
+        
+        function checkAnimalAnswer(selectedIndex, correctIndex) {
+            const options = document.querySelectorAll('#animal-options .quiz-option');
+            
+            // Deshabilitar todas las opciones
+            options.forEach(option => {
+                option.onclick = null;
+                option.classList.add('disabled');
+            });
+            
+            // Mostrar respuesta correcta/incorrecta
+            if (selectedIndex === correctIndex) {
+                options[selectedIndex].classList.add('correct');
+                correctAnimalAnswers++;
+            } else {
+                options[selectedIndex].classList.add('incorrect');
+                options[correctIndex].classList.add('correct');
+            }
+            
+            // Avanzar a la siguiente pregunta después de un breve retraso
+            setTimeout(() => {
+                currentAnimalQuestion++;
+                loadAnimalQuestion();
+            }, 1500);
+        }
+        
+        function showAnimalResults() {
+            const title = document.getElementById('animal-result-title');
+            const text = document.getElementById('animal-result-text');
+            
+            // Mostrar resultado específico
+            text.textContent = `Tuviste ${correctAnimalAnswers}/${animalQuestions.length} respuestas correctas`;
+            
+            if (correctAnimalAnswers === animalQuestions.length) {
+                title.textContent = "¡Ki'imak óolal! - ¡Felicidades!";
+                text.textContent += ", ¡Estás list@ para usar Mayapprendo!";
+                
+                // Actualizar progreso de la lección
+                updateLessonProgress('animal-lesson-page', 100);
+                
+                // Actualizar logros
+                completedQuizzes++;
+                if (correctAnimalAnswers === animalQuestions.length) {
+                    perfectQuizzes++;
+                    updateAchievementProgress('3-perfect-quizzes', 33.333);
+                    updateAchievementProgress('6-perfect-quizzes', 16.667);
+                }
+            } else if (correctAnimalAnswers > 3) {
+                title.textContent = "¡Ma' a k'uxtik! - No te preocupes";
+                text.textContent += ", casi lo logras, ¡Sigue practicando!";
+            } else {
+                title.textContent = "Tsu ts'a'a a wóol... - Lo intentaste...";
+                text.textContent += ", pero no te preocupes... ¡Puedes volverlo a intentar!";
+            }
+            
+            showPage('animal-result-page');
+        }
+        
+        // Funciones para el quiz de alimentos
+        function startFoodQuiz() {
+            // Actualizar progreso de la lección
+            updateLessonProgress('food-lesson-page', 50);
+            
+            // Actualizar logros
+            updateAchievementProgress('daily-quiz', 100);
+            
+            showPage('food-quiz-page');
+        }
+        
+        function loadFoodQuestion() {
+            if (currentFoodQuestion >= foodQuestions.length) {
+                // Mostrar resultados
+                showFoodResults();
+                return;
+            }
+            
+            const question = foodQuestions[currentFoodQuestion];
+            document.getElementById('food-question').textContent = question.question;
+            document.getElementById('food-quiz-image').textContent = question.image;
+            document.getElementById('food-progress').textContent = `Pregunta ${currentFoodQuestion + 1} de ${foodQuestions.length}`;
+            
+            const optionsContainer = document.getElementById('food-options');
+            optionsContainer.innerHTML = '';
+            
+            // Mezclar opciones aleatoriamente
+            const shuffledOptions = [...question.options];
+            for (let i = shuffledOptions.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffledOptions[i], shuffledOptions[j]] = [shuffledOptions[j], shuffledOptions[i]];
+            }
+            
+            // Actualizar índice correcto después de mezclar
+            const correctIndex = shuffledOptions.indexOf(question.options[question.correct]);
+            
+            shuffledOptions.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'quiz-option';
+                optionElement.textContent = option;
+                optionElement.onclick = () => checkFoodAnswer(index, correctIndex);
+                optionsContainer.appendChild(optionElement);
+            });
+        }
+        
+        function checkFoodAnswer(selectedIndex, correctIndex) {
+            const options = document.querySelectorAll('#food-options .quiz-option');
+            
+            // Deshabilitar todas las opciones
+            options.forEach(option => {
+                option.onclick = null;
+                option.classList.add('disabled');
+            });
+            
+            // Mostrar respuesta correcta/incorrecta
+            if (selectedIndex === correctIndex) {
+                options[selectedIndex].classList.add('correct');
+                correctFoodAnswers++;
+            } else {
+                options[selectedIndex].classList.add('incorrect');
+                options[correctIndex].classList.add('correct');
+            }
+            
+            // Avanzar a la siguiente pregunta después de un breve retraso
+            setTimeout(() => {
+                currentFoodQuestion++;
+                loadFoodQuestion();
+            }, 1500);
+        }
+        
+        function showFoodResults() {
+            const title = document.getElementById('food-result-title');
+            const text = document.getElementById('food-result-text');
+            
+            // Mostrar resultado específico
+            text.textContent = `Tuviste ${correctFoodAnswers}/${foodQuestions.length} respuestas correctas`;
+            
+            if (correctFoodAnswers === foodQuestions.length) {
+                title.textContent = "¡Ki'imak óolal! - ¡Felicidades!";
+                text.textContent += ". Conseguiste +10 cacaos.";
+                
+                // Actualizar progreso de la lección
+                updateLessonProgress('food-lesson-page', 100);
+                
+                // Actualizar logros
+                completedQuizzes++;
+                if (correctFoodAnswers === foodQuestions.length) {
+                    perfectQuizzes++;
+                    updateAchievementProgress('3-perfect-quizzes', 33.333);
+                    updateAchievementProgress('6-perfect-quizzes', 16.667);
+                }
+            } else if (correctFoodAnswers > 3) {
+                title.textContent = "¡Ma' a k'uxtik! - No te preocupes";
+                text.textContent += ", casi perfecto, ¡Sigue practicando!";
+            } else {
+                title.textContent = "Tsu ts'a'a a wóol... - Lo intentaste...";
+                text.textContent += ", pero no te preocupes... ¡Puedes volverlo a intentar!";
+            }
+            
+            showPage('food-result-page');
+        }
+        
+        // Funciones para el quiz de números (escritura)
+        function startNumbersQuiz() {
+            // Actualizar progreso de la lección
+            updateLessonProgress('numbers-lesson-page', 50);
+            
+            // Actualizar logros
+            updateAchievementProgress('daily-quiz', 100);
+            
+            showPage('numbers-writing-quiz-page');
+        }
+        
+        function loadNumbersWritingQuestions() {
+            const container = document.getElementById('numbers-writing-questions-container');
+            container.innerHTML = '';
+            
+            numbersWritingQuestions.forEach((question, index) => {
+                const questionElement = document.createElement('div');
+                questionElement.className = 'writing-question';
+                questionElement.innerHTML = `
+                    <p>${question.text}</p>
+                    <input type="text" class="writing-input" id="numbers-writing-answer-${index}" placeholder="Escribe tu respuesta aquí">
+                    <div class="writing-feedback" id="numbers-writing-feedback-${index}"></div>
+                `;
+                container.appendChild(questionElement);
+            });
+        }
+        
+        function checkNumbersWritingAnswers() {
+            correctNumbersWritingAnswers = 0;
+            
+            numbersWritingQuestions.forEach((question, index) => {
+                const userAnswer = document.getElementById(`numbers-writing-answer-${index}`).value.trim();
+                const feedback = document.getElementById(`numbers-writing-feedback-${index}`);
+                
+                if (userAnswer.toLowerCase() === question.answer.toLowerCase()) {
+                    feedback.textContent = "¡Correcto!";
+                    feedback.className = "writing-feedback correct";
+                    correctNumbersWritingAnswers++;
+                } else {
+                    feedback.textContent = `Respuesta correcta: ${question.answer}`;
+                    feedback.className = "writing-feedback incorrect";
+                }
+            });
+            
+            showNumbersResults();
+        }
+        
+        function showNumbersResults() {
+            const title = document.getElementById('numbers-result-title');
+            const text = document.getElementById('numbers-result-text');
+            
+            // Mostrar resultado específico
+            text.textContent = `Tuviste ${correctNumbersWritingAnswers}/${numbersWritingQuestions.length} respuestas correctas`;
+            
+            if (correctNumbersWritingAnswers === numbersWritingQuestions.length) {
+                title.textContent = "¡Ki'imak óolal! - ¡Felicidades!";
+                text.textContent += ". Conseguiste +10 cacaos.";
+                
+                // Actualizar progreso de la lección
+                updateLessonProgress('numbers-lesson-page', 100);
+                
+                // Actualizar logros
+                completedQuizzes++;
+                if (correctNumbersWritingAnswers === numbersWritingQuestions.length) {
+                    perfectQuizzes++;
+                    updateAchievementProgress('3-perfect-quizzes', 33.333);
+                    updateAchievementProgress('6-perfect-quizzes', 16.667);
+                }
+            } else if (correctNumbersWritingAnswers > 3) {
+                title.textContent = "¡Ma' a k'uxtik! - No te preocupes";
+                text.textContent += ", casi perfecto, ¡Sigue practicando!";
+            } else {
+                title.textContent = "Tsu ts'a'a a wóol... - Lo intentaste...";
+                text.textContent += ", pero no te preocupes... ¡Puedes volverlo a intentar!";
+            }
+            
+            showPage('numbers-result-page');
+        }
+        
+        // Funciones para el quiz de colores
+        function startColorsQuiz() {
+            // Actualizar progreso de la lección
+            updateLessonProgress('colors-lesson-page', 50);
+            
+            // Actualizar logros
+            updateAchievementProgress('daily-quiz', 100);
+            
+            showPage('colors-quiz-page');
+        }
+        
+        function loadColorsQuestion() {
+            if (currentColorsQuestion >= colorsQuestions.length) {
+                // Mostrar resultados
+                showColorsResults();
+                return;
+            }
+            
+            const question = colorsQuestions[currentColorsQuestion];
+            document.getElementById('colors-question').textContent = question.question;
+            document.getElementById('colors-quiz-image').textContent = question.image;
+            document.getElementById('colors-progress').textContent = `Pregunta ${currentColorsQuestion + 1} de ${colorsQuestions.length}`;
+            
+            const optionsContainer = document.getElementById('colors-options');
+            optionsContainer.innerHTML = '';
+            
+            // Mezclar opciones aleatoriamente
+            const shuffledOptions = [...question.options];
+            for (let i = shuffledOptions.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffledOptions[i], shuffledOptions[j]] = [shuffledOptions[j], shuffledOptions[i]];
+            }
+            
+            // Actualizar índice correcto después de mezclar
+            const correctIndex = shuffledOptions.indexOf(question.options[question.correct]);
+            
+            shuffledOptions.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'quiz-option';
+                optionElement.textContent = option;
+                optionElement.onclick = () => checkColorsAnswer(index, correctIndex);
+                optionsContainer.appendChild(optionElement);
+            });
+        }
+        
+        function checkColorsAnswer(selectedIndex, correctIndex) {
+            const options = document.querySelectorAll('#colors-options .quiz-option');
+            
+            // Deshabilitar todas las opciones
+            options.forEach(option => {
+                option.onclick = null;
+                option.classList.add('disabled');
+            });
+            
+            // Mostrar respuesta correcta/incorrecta
+            if (selectedIndex === correctIndex) {
+                options[selectedIndex].classList.add('correct');
+                correctColorsAnswers++;
+            } else {
+                options[selectedIndex].classList.add('incorrect');
+                options[correctIndex].classList.add('correct');
+            }
+            
+            // Avanzar a la siguiente pregunta después de un breve retraso
+            setTimeout(() => {
+                currentColorsQuestion++;
+                loadColorsQuestion();
+            }, 1500);
+        }
+        
+        function showColorsResults() {
+            const title = document.getElementById('colors-result-title');
+            const text = document.getElementById('colors-result-text');
+            
+            // Mostrar resultado específico
+            text.textContent = `Tuviste ${correctColorsAnswers}/${colorsQuestions.length} respuestas correctas`;
+            
+            if (correctColorsAnswers === colorsQuestions.length) {
+                title.textContent = "¡Ki'imak óolal! - ¡Felicidades!";
+                text.textContent += ". Conseguiste +10 cacaos.";
+                
+                // Actualizar progreso de la lección
+                updateLessonProgress('colors-lesson-page', 100);
+                
+                // Actualizar logros
+                completedQuizzes++;
+                if (correctColorsAnswers === colorsQuestions.length) {
+                    perfectQuizzes++;
+                    updateAchievementProgress('3-perfect-quizzes', 33.333);
+                    updateAchievementProgress('6-perfect-quizzes', 16.667);
+                }
+            } else if (correctColorsAnswers > 3) {
+                title.textContent = "¡Ma' a k'uxtik! - No te preocupes";
+                text.textContent += ", casi perfecto, ¡Sigue practicando!";
+            } else {
+                title.textContent = "Tsu ts'a'a a wóol... - Lo intentaste...";
+                text.textContent += ", pero no te preocupes... ¡Puedes volverlo a intentar!";
+            }
+            
+            showPage('colors-result-page');
+        }
+        
+        // Funciones para el quiz de pronombres
+        function startPronounsQuiz() {
+            // Actualizar progreso de la lección
+            updateLessonProgress('pronouns-lesson-page', 50);
+            
+            // Actualizar logros
+            updateAchievementProgress('daily-quiz', 100);
+            
+            showPage('pronouns-quiz-page');
+        }
+        
+        function loadPronounsQuestion() {
+            if (currentPronounsQuestion >= pronounsQuestions.length) {
+                // Mostrar resultados
+                showPronounsResults();
+                return;
+            }
+            
+            const question = pronounsQuestions[currentPronounsQuestion];
+            document.getElementById('pronouns-question').textContent = question.question;
+            document.getElementById('pronouns-quiz-image').textContent = question.image;
+            document.getElementById('pronouns-progress').textContent = `Pregunta ${currentPronounsQuestion + 1} de ${pronounsQuestions.length}`;
+            
+            const optionsContainer = document.getElementById('pronouns-options');
+            optionsContainer.innerHTML = '';
+            
+            // Mezclar opciones aleatoriamente
+            const shuffledOptions = [...question.options];
+            for (let i = shuffledOptions.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffledOptions[i], shuffledOptions[j]] = [shuffledOptions[j], shuffledOptions[i]];
+            }
+            
+            // Actualizar índice correcto después de mezclar
+            const correctIndex = shuffledOptions.indexOf(question.options[question.correct]);
+            
+            shuffledOptions.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'quiz-option';
+                optionElement.textContent = option;
+                optionElement.onclick = () => checkPronounsAnswer(index, correctIndex);
+                optionsContainer.appendChild(optionElement);
+            });
+        }
+        
+        function checkPronounsAnswer(selectedIndex, correctIndex) {
+            const options = document.querySelectorAll('#pronouns-options .quiz-option');
+            
+            // Deshabilitar todas las opciones
+            options.forEach(option => {
+                option.onclick = null;
+                option.classList.add('disabled');
+            });
+            
+            // Mostrar respuesta correcta/incorrecta
+            if (selectedIndex === correctIndex) {
+                options[selectedIndex].classList.add('correct');
+                correctPronounsAnswers++;
+            } else {
+                options[selectedIndex].classList.add('incorrect');
+                options[correctIndex].classList.add('correct');
+            }
+            
+            // Avanzar a la siguiente pregunta después de un breve retraso
+            setTimeout(() => {
+                currentPronounsQuestion++;
+                loadPronounsQuestion();
+            }, 1500);
+        }
+        
+        function showPronounsResults() {
+            const title = document.getElementById('pronouns-result-title');
+            const text = document.getElementById('pronouns-result-text');
+            
+            // Mostrar resultado específico
+            text.textContent = `Tuviste ${correctPronounsAnswers}/${pronounsQuestions.length} respuestas correctas`;
+            
+            if (correctPronounsAnswers === pronounsQuestions.length) {
+                title.textContent = "¡Ki'imak óolal! - ¡Felicidades!";
+                text.textContent += ". Conseguiste +10 cacaos.";
+                
+                // Actualizar progreso de la lección
+                updateLessonProgress('pronouns-lesson-page', 100);
+                
+                // Actualizar logros
+                completedQuizzes++;
+                if (correctPronounsAnswers === pronounsQuestions.length) {
+                    perfectQuizzes++;
+                    updateAchievementProgress('3-perfect-quizzes', 33.333);
+                    updateAchievementProgress('6-perfect-quizzes', 16.667);
+                }
+            } else if (correctPronounsAnswers > 3) {
+                title.textContent = "¡Ma' a k'uxtik! - No te preocupes";
+                text.textContent += ", casi perfecto, ¡Sigue practicando!";
+            } else {
+                title.textContent = "Tsu ts'a'a a wóol... - Lo intentaste...";
+                text.textContent += ", pero no te preocupes... ¡Puedes volverlo a intentar!";
+            }
+            
+            showPage('pronouns-result-page');
+        }
+        
+        // Funciones para el quiz de escritura de familia
+        function startFamilyQuiz() {
+            // Actualizar progreso de la lección
+            updateLessonProgress('family-lesson-page', 50);
+            
+            // Actualizar logros
+            updateAchievementProgress('daily-quiz', 100);
+            
+            showPage('family-writing-quiz-page');
+        }
+        
+        function loadWritingQuestions() {
+            const container = document.getElementById('writing-questions-container');
+            container.innerHTML = '';
+            
+            writingQuestions.forEach((question, index) => {
+                const questionElement = document.createElement('div');
+                questionElement.className = 'writing-question';
+                questionElement.innerHTML = `
+                    <p>${question.text}</p>
+                    <input type="text" class="writing-input" id="writing-answer-${index}" placeholder="Escribe tu respuesta aquí">
+                    <div class="writing-feedback" id="writing-feedback-${index}"></div>
+                `;
+                container.appendChild(questionElement);
+            });
+        }
+        
+        function checkWritingAnswers() {
+            correctWritingAnswers = 0;
+            
+            writingQuestions.forEach((question, index) => {
+                const userAnswer = document.getElementById(`writing-answer-${index}`).value.trim();
+                const feedback = document.getElementById(`writing-feedback-${index}`);
+                
+                if (userAnswer.toLowerCase() === question.answer.toLowerCase()) {
+                    feedback.textContent = "¡Correcto!";
+                    feedback.className = "writing-feedback correct";
+                    correctWritingAnswers++;
+                } else {
+                    feedback.textContent = `Respuesta correcta: ${question.answer}`;
+                    feedback.className = "writing-feedback incorrect";
+                }
+            });
+            
+            showWritingResults();
+        }
+        
+        function showWritingResults() {
+            const title = document.getElementById('family-result-title');
+            const text = document.getElementById('family-result-text');
+            
+            // Mostrar resultado específico
+            text.textContent = `Tuviste ${correctWritingAnswers}/${writingQuestions.length} respuestas correctas`;
+            
+            if (correctWritingAnswers === writingQuestions.length) {
+                title.textContent = "¡Ki'imak óolal! - ¡Felicidades!";
+                text.textContent += ", ¡Estás list@ para usar Mayapprendo!";
+                
+                // Actualizar progreso de la lección
+                updateLessonProgress('family-lesson-page', 100);
+                
+                // Actualizar logros
+                completedQuizzes++;
+                if (correctWritingAnswers === writingQuestions.length) {
+                    perfectQuizzes++;
+                    updateAchievementProgress('3-perfect-quizzes', 33.333);
+                    updateAchievementProgress('6-perfect-quizzes', 16.667);
+                }
+            } else if (correctWritingAnswers > 3) {
+                title.textContent = "¡Ma' a k'uxtik! - Muy bien";
+                text.textContent += ", casi lo logras, ¡Sigue practicando!";
+            } else {
+                title.textContent = "Tsu ts'a'a a wóol... - Lo intentaste...";
+                text.textContent += ", pero no te preocupes... ¡Puedes volverlo a intentar!";
+            }
+            
+            showPage('family-result-page');
+        }
+        
+        // Función para actualizar el progreso de una lección
+        function updateLessonProgress(lessonId, progress) {
+            if (lessonProgress[lessonId] < progress) {
+                lessonProgress[lessonId] = progress;
+                
+                // Actualizar logros de lecciones
+                if (progress === 50) {
+                    updateAchievementProgress('5-lessons', 20);
+                    updateAchievementProgress('10-lessons', 10);
+                }
+                
+                // Si la lección está completada (100%), agregarla a completedLessons
+                if (progress === 100 && !completedLessons.includes(lessonId)) {
+                    completedLessons.push(lessonId);
+                }
+                
+                // Actualizar la página de inicio
+                updateHomePage();
+            }
+        }
+        
+        // Función para actualizar el progreso de un logro
+        function updateAchievementProgress(achievementId, progress) {
+            if (!achievements[achievementId].completed) {
+                achievements[achievementId].progress += progress;
+                
+                // Si el logro alcanza el 100%, marcarlo como completado
+                if (achievements[achievementId].progress >= 100) {
+                    achievements[achievementId].progress = 100;
+                    achievements[achievementId].completed = true;
+                }
+                
+                // Actualizar la página de logros
+                updateAchievementsPage();
+            }
+        }
+        
+        // Función para reclamar un logro
+        function claimAchievement(achievementId) {
+            // Eliminar el logro de la lista de completados
+            delete achievements[achievementId];
+            
+            // Actualizar la página de logros
+            updateAchievementsPage();
+        }
+        
+        // Función para actualizar la página de inicio
+        function updateHomePage() {
+            // Actualizar sección "Tus lecciones" (progreso > 0% y < 100%)
+            const yourLessonsContainer = document.getElementById('your-lessons');
+            yourLessonsContainer.innerHTML = '';
+            
+            Object.keys(lessonProgress).forEach(lessonId => {
+                const progress = lessonProgress[lessonId];
+                if (progress > 0 && progress < 100) {
+                    const lessonCard = createLessonCard(lessonId, progress);
+                    yourLessonsContainer.appendChild(lessonCard);
+                }
+            });
+            
+            // Actualizar sección "Lecciones | Básico" (todas las lecciones)
+            const basicLessonsContainer = document.getElementById('basic-lessons');
+            basicLessonsContainer.innerHTML = '';
+            
+            Object.keys(lessonProgress).forEach(lessonId => {
+                const progress = lessonProgress[lessonId];
+                const lessonCard = createLessonCard(lessonId, progress);
+                basicLessonsContainer.appendChild(lessonCard);
+            });
+            
+            // Actualizar sección "Lecciones terminadas" (progreso = 100%)
+            const completedLessonsContainer = document.getElementById('completed-lessons');
+            completedLessonsContainer.innerHTML = '';
+            
+            completedLessons.forEach(lessonId => {
+                const lessonCard = createLessonCard(lessonId, 100);
+                completedLessonsContainer.appendChild(lessonCard);
+            });
+        }
+        
+        // Función para crear una tarjeta de lección
+        function createLessonCard(lessonId, progress) {
+            const lessonData = {
+                'animal-lesson-page': { title: 'Animales', icon: '🐔', page: 'animal-lesson-page' },
+                'family-lesson-page': { title: 'Familia', icon: '👨‍👩‍👧‍👦', page: 'family-lesson-page' },
+                'food-lesson-page': { title: 'Alimentos', icon: '🍎', page: 'food-lesson-page' },
+                'numbers-lesson-page': { title: 'Números', icon: '🔢', page: 'numbers-lesson-page' },
+                'colors-lesson-page': { title: 'Colores', icon: '🎨', page: 'colors-lesson-page' },
+                'pronouns-lesson-page': { title: 'Pronombres', icon: '👤', page: 'pronouns-lesson-page' }
+            };
+            
+            const lesson = lessonData[lessonId];
+            const lessonCard = document.createElement('div');
+            lessonCard.className = 'lesson-card';
+            lessonCard.onclick = () => showPage(lesson.page);
+            
+            lessonCard.innerHTML = `
+                <div class="lesson-img">${lesson.icon}</div>
+                <h4>${lesson.title}</h4>
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${progress}%"></div>
+                    </div>
+                    <div class="progress-percentage">${progress}%</div>
+                </div>
+            `;
+            
+            return lessonCard;
+        }
+        
+        // Función para actualizar la página de logros
+        function updateAchievementsPage() {
+            // Actualizar logros diarios
+            const dailyAchievementsContainer = document.getElementById('daily-achievements');
+            dailyAchievementsContainer.innerHTML = '';
+            
+            // Logro diario: Realiza el quiz diario
+            const dailyQuizProgress = achievements['daily-quiz'].progress;
+            const dailyQuizCompleted = achievements['daily-quiz'].completed;
+            
+            const dailyQuizAchievement = document.createElement('div');
+            dailyQuizAchievement.className = `achievement ${dailyQuizCompleted ? 'completed' : ''}`;
+            dailyQuizAchievement.innerHTML = `
+                <div class="achievement-icon">${dailyQuizCompleted ? '✓' : '⏱︎'}</div>
+                <div class="achievement-info">
+                    <h4>Realiza el quiz diario</h4>
+                    <p>+15 XP • +5 Cacaos</p>
+                    ${!dailyQuizCompleted ? `
+                    <div class="progress-container" style="margin-top: 5px;">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${dailyQuizProgress}%"></div>
+                        </div>
+                        <div class="progress-percentage">${dailyQuizProgress}%</div>
+                    </div>
+                    ` : ''}
+                </div>
+                ${dailyQuizCompleted ? '<button class="claim-btn" onclick="claimAchievement(\'daily-quiz\')">Reclamar</button>' : ''}
+            `;
+            
+            dailyAchievementsContainer.appendChild(dailyQuizAchievement);
+            
+            // Actualizar logros completados
+            const completedAchievementsContainer = document.getElementById('completed-achievements');
+            completedAchievementsContainer.innerHTML = '';
+            
+            Object.keys(achievements).forEach(achievementId => {
+                if (achievements[achievementId].completed) {
+                    const achievement = getAchievementData(achievementId);
+                    const achievementElement = document.createElement('div');
+                    achievementElement.className = 'achievement completed';
+                    achievementElement.innerHTML = `
+                        <div class="achievement-icon">✓</div>
+                        <div class="achievement-info">
+                            <h4>${achievement.title}</h4>
+                            <p>${achievement.reward}</p>
+                        </div>
+                        <button class="claim-btn" onclick="claimAchievement('${achievementId}')">Reclamar</button>
+                    `;
+                    completedAchievementsContainer.appendChild(achievementElement);
+                }
+            });
+            
+            // Actualizar logros en progreso
+            const inProgressAchievementsContainer = document.getElementById('in-progress-achievements');
+            inProgressAchievementsContainer.innerHTML = '';
+            
+            Object.keys(achievements).forEach(achievementId => {
+                if (!achievements[achievementId].completed) {
+                    const achievement = getAchievementData(achievementId);
+                    const progress = achievements[achievementId].progress;
+                    
+                    const achievementElement = document.createElement('div');
+                    achievementElement.className = 'achievement';
+                    achievementElement.innerHTML = `
+                        <div class="achievement-icon">${Math.round(progress)}%</div>
+                        <div class="achievement-info">
+                            <h4>${achievement.title}</h4>
+                            <p>${achievement.reward}</p>
+                            <div class="progress-container" style="margin-top: 5px;">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: ${progress}%"></div>
+                                </div>
+                                <div class="progress-percentage">${Math.round(progress)}%</div>
+                            </div>
+                        </div>
+                    `;
+                    inProgressAchievementsContainer.appendChild(achievementElement);
+                }
+            });
+        }
+        
+        // Función para obtener datos de un logro
+        function getAchievementData(achievementId) {
+            const achievementData = {
+                'daily-quiz': { title: 'Realiza el quiz diario', reward: '+15 XP • +5 Cacaos' },
+                '5-lessons': { title: 'Terminaste 5 lecciones', reward: '+50 XP • +10 Cacaos' },
+                '10-lessons': { title: 'Terminaste 10 lecciones', reward: '+100 XP • +20 Cacaos' },
+                '3-perfect-quizzes': { title: 'Concluiste 3 exámenes con 100% de puntuación', reward: '+100 XP • +20 Cacaos' },
+                '6-perfect-quizzes': { title: 'Concluiste 6 exámenes con 100% de puntuación', reward: '+100 XP • +20 Cacaos' },
+                '10-days-login': { title: 'Login por 10 días', reward: '+100 XP • +20 Cacaos' },
+                '15-days-login': { title: 'Login por 15 días', reward: '+150 XP • +25 Cacaos' }
+            };
+            
+            return achievementData[achievementId] || { title: 'Logro', reward: '+0 XP • +0 Cacaos' };
+        }
+        
+        // Función para actualizar el dato curioso
+        function updateFunFact() {
+            const funFacts = [
+                "La lengua maya se habla principalmente en la península de Yucatán, pero también en Quintana Roo, Campeche, Chiapas, Tabasco y en algunas partes de Guatemala y Belice.",
+                "Los mayas fueron de las primeras civilizaciones del mundo en usar el número cero como concepto matemático. Esto les permitió crear calendarios súper exactos y hacer operaciones avanzadas que otras culturas no podían.",
+                "Muchas pirámides y templos mayas están construidos de tal forma que, en solsticios o equinoccios, la luz del sol crea sombras y efectos especiales. Esto les servía para medir el tiempo y hacer rituales.",
+                "Los mayas extraían una sustancia pegajosa del árbol del chicozapote que masticaban como dulce o para limpiar los dientes. Ese material fue la base del chicle moderno siglos después.",
+                "Para las comunidades mayas, el jade era más valioso que el oro porque representaba vida, agua y poder. Con él hacían máscaras, joyas y ofrendas.",
+                "En ciudades como Chichén Itzá, los mayas construían nuevas pirámides encima de estructuras más antiguas, como si fueran capas de una cebolla. Que padre, ¿no?"
+            ];
+            
+            const randomIndex = Math.floor(Math.random() * funFacts.length);
+            document.getElementById('fun-fact-text').textContent = funFacts[randomIndex];
+        }
+        
+        // Función para activar/desactivar el modo oscuro
+        function toggleDarkMode() {
+            const body = document.body;
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
+            
+            if (darkModeToggle.checked) {
+                body.classList.add('dark-mode');
+                localStorage.setItem('darkMode', 'enabled');
+            } else {
+                body.classList.remove('dark-mode');
+                localStorage.setItem('darkMode', 'disabled');
+            }
+        }
+        
+        // Inicializar la aplicación
+        document.addEventListener('DOMContentLoaded', function() {
+            // Establecer página inicial
+            showPage('welcome-page');
+            
+            // Configurar modo oscuro
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
+            if (darkModeToggle) {
+                darkModeToggle.addEventListener('change', toggleDarkMode);
+                
+                // Cargar preferencia de modo oscuro
+                if (localStorage.getItem('darkMode') === 'enabled') {
+                    darkModeToggle.checked = true;
+                    document.body.classList.add('dark-mode');
+                }
+            }
+            
+            // Agregar botones de resultado a las páginas de resultados existentes
+            const resultPages = ['animal-result-page', 'family-result-page', 'food-result-page', 'numbers-result-page', 'colors-result-page', 'pronouns-result-page'];
+            resultPages.forEach(pageId => {
+                const page = document.getElementById(pageId);
+                if (page) {
+                    const resultContainer = page.querySelector('.result-container');
+                    if (resultContainer && !resultContainer.querySelector('.result-buttons')) {
+                        const resultButtons = document.createElement('div');
+                        resultButtons.className = 'result-buttons';
+                        resultButtons.innerHTML = `
+                            <button class="btn btn-secondary" onclick="showPage('${pageId.replace('-result-page', '-lesson-page')}')">Repetir Lección</button>
+                            <button class="btn btn-primary" onclick="showPage('home-page')">Volver al Inicio</button>
+                        `;
+                        resultContainer.appendChild(resultButtons);
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
